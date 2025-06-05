@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <title>AR Tata Surya</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <a-scene embedded arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+        renderer="logarithmicDepthBuffer: true;">
+        <a-assets>
+            <a-asset-item id="sun-model" src="models/sun.glb"></a-asset-item>
+            <a-asset-item id="earth-model" src="models/earth.glb"></a-asset-item>
+            <a-asset-item id="moon-model" src="models/moon.glb"></a-asset-item>
+            <a-asset-item id="saturn-model" src="models/saturn.glb"></a-asset-item>
+        </a-assets>
+
+        <a-marker preset="hiro">
+            <a-light type="ambient" color="#FFFFFF" intensity="0.5"></a-light>
+            <a-light type="point" intensity="1" position="0 0 0"></a-light>
+
+            <!-- Matahari -->
+            <a-entity id="sun" position="0 0 0" scale="0.05 0.05 0.05">
+                <a-entity gltf-model="#sun-model"
+                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
+                </a-entity>
+            </a-entity>
+
+            <!-- Orbit Bumi (earth-orbit) akan melakukan rotasi, bumi ditempatkan dalam orbit -->
+            <a-entity id="earth-orbit" position="0 0 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 36500; easing: linear">
+                <!-- Bumi berada di "lingkaran orbit" (posisi x=1) -->
+                <a-entity id="earth-container" position="1 0 0">
+                    <a-entity id="earth" scale="0.5 0.5 0.5">
+                        <a-entity gltf-model="#earth-model"
+                            animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
+                        </a-entity>
+                    </a-entity>
+
+                    <!-- Orbit Bulan -->
+                    <a-entity id="moon-orbit" position="1 0 0"
+                        animation="property: rotation; to: 0 360 0; loop: true; dur: 2700; easing: linear">
+                        <a-entity id="moon" position="0.2 0 0" scale="0.5 0.5 0.5">
+                            <a-entity gltf-model="#moon-model"></a-entity>
+                        </a-entity>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+
+            <!-- Orbit Saturnus -->
+            <a-entity id="saturn-orbit" position="0 0 0"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 107700; easing: linear">
+                <a-entity id="saturn-container" position="2.5 0 0">
+                    <a-entity id="saturn" scale="0.002 0.002 0.002">
+                        <a-entity gltf-model="#saturn-model"
+                            animation="property: rotation; to: 0 360 0; loop: true; dur: 1000; easing: linear">
+                        </a-entity>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+        </a-marker>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+
+</html>
