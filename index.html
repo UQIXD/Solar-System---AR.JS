@@ -19,16 +19,18 @@
 </head>
 
 <body>
+    <audio id="bg-audio" src="audio/sound.mp3" loop></audio>
     <a-scene embedded arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
         renderer="logarithmicDepthBuffer: true;">
         <a-assets>
             <a-asset-item id="sun-model" src="models/sun.glb"></a-asset-item>
             <a-asset-item id="earth-model" src="models/earth.glb"></a-asset-item>
+            <a-asset-item id="jupiter-model" src="models/jupiter.glb"></a-asset-item>
             <a-asset-item id="moon-model" src="models/moon.glb"></a-asset-item>
             <a-asset-item id="saturn-model" src="models/saturn.glb"></a-asset-item>
         </a-assets>
 
-        <a-marker preset="hiro">
+        <a-marker preset="hiro" id="marker">
             <a-light type="ambient" color="#FFFFFF" intensity="0.5"></a-light>
             <a-light type="point" intensity="1" position="0 0 0"></a-light>
 
@@ -40,20 +42,20 @@
             </a-entity>
 
             <!-- Orbit Bumi (earth-orbit) akan melakukan rotasi, bumi ditempatkan dalam orbit -->
-            <a-entity id="earth-orbit" position="0 0 0"
+            <a-entity id="jupiter-orbit" position="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 36500; easing: linear">
                 <!-- Bumi berada di "lingkaran orbit" (posisi x=1) -->
-                <a-entity id="earth-container" position="1 0 0">
-                    <a-entity id="earth" scale="0.5 0.5 0.5">
-                        <a-entity gltf-model="#earth-model"
+                <a-entity id="jupiter-container" position="1.5 0 0">
+                    <a-entity id="jupiter" scale="0.3 0.3 0.3">
+                        <a-entity gltf-model="#jupiter-model"
                             animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
                         </a-entity>
                     </a-entity>
 
                     <!-- Orbit Bulan -->
-                    <a-entity id="moon-orbit" position="1 0 0"
+                    <a-entity id="moon-orbit" position="0 0 0"
                         animation="property: rotation; to: 0 360 0; loop: true; dur: 2700; easing: linear">
-                        <a-entity id="moon" position="0.2 0 0" scale="0.5 0.5 0.5">
+                        <a-entity id="moon" position="0.5 0 0" scale="0.09 0.09 0.09">
                             <a-entity gltf-model="#moon-model"></a-entity>
                         </a-entity>
                     </a-entity>
@@ -75,6 +77,26 @@
 
         <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('bg-audio');
+            const marker = document.getElementById('marker');
+            
+            // Event ketika marker terdeteksi
+            marker.addEventListener('markerFound', function() {
+                console.log('Marker ditemukan, memutar audio...');
+                audio.play().catch(e => console.log('Autoplay prevented:', e));
+            });
+            
+            // Event ketika marker hilang
+            marker.addEventListener('markerLost', function() {
+                console.log('Marker hilang, menghentikan audio...');
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        });
+    </script>
 </body>
 
 </html>
